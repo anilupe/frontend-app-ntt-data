@@ -1,0 +1,14 @@
+<div class="search-container">
+    <input [(ngModel)]="searchTerm" placeholder="Buscar productos" />
+    <button (click)="searchProducts()">Buscar</button>
+  </div>
+  <div class="product-list">
+    <div *ngFor="let product of products" class="product-item">
+      <img [src]="product.logo" alt="{{ product.name }}" />
+      <h2>{{ product.name }}</h2>
+      <p>{{ product.description }}</p>
+      <p>Fecha de lanzamiento: {{ product.date_release }}</p>
+      <p>Fecha de revisión: {{ product.date_revision }}</p>
+    </div>
+  </div>
+  
