@@ -27,4 +27,8 @@ export class ProductService {
   deleteProduct(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
+  
+  validateId(id:string){
+    return this.http.get<boolean>(`/bp/products/verification/${id}`);
+  }
 }

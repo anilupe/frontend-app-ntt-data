@@ -1,0 +1,12 @@
+.skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .skeleton-item {
+    height: 2rem;
+    background: #ccc;
+    border-radius: 4px;
+  }
+  

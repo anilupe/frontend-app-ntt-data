@@ -56,12 +56,11 @@ describe('ProductListComponent', () => {
   });
 
   it('should search products correctly', () => {
-    const searchTerm = 'Product 1'; // Término de búsqueda para simular
+    const searchTerm = 'Product 1'; 
 
-    component.searchTerm = searchTerm; // Asigna el término de búsqueda al componente
-    component.searchProducts(); // Llama al método de búsqueda
+    component.searchTerm = searchTerm; 
+    component.searchProducts(); 
 
-    // Verifica que solo el producto correcto esté en la lista después de la búsqueda
     expect(component.filteredProducts.length).toBe(1);
     expect(component.filteredProducts[0].name).toContain(searchTerm);
   });

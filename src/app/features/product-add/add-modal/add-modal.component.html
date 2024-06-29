@@ -1,0 +1,55 @@
+<div *ngIf="isVisible" class="modal">
+  <div class="modal-content">
+    <span class="close" (click)="cancelDelete()">&times;</span>
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="form-container">
+      <div class="header">Formulario de Registro</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="productId">Id</label>
+          <input type="text" id="productId" formControlName="id" class="styled-input" [class.error]="isInvalid('id')" required="true">
+          <div *ngIf="isInvalid('id')">ID no válido! Debe tener entre 3 y 10 caracteres.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="productName">Nombre</label>
+          <input type="text" id="productName" formControlName="name" class="styled-input" [class.error]="isInvalid('name')">
+          <div *ngIf="isInvalid('name')">Este campo es requerido! </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="productDescription">Descripción</label>
+          <input type="text" id="productDescription" formControlName="description" class="styled-input" [class.error]="isInvalid('description')">
+          <div *ngIf="isInvalid('description')">Este campo es requerido! </div>
+        </div>
+
+        <div class="form-group">
+          <label for="productLogo">Logo</label>
+          <input type="text" id="productLogo" formControlName="logo" class="styled-input" [class.error]="isInvalid('logo')">
+          <div *ngIf="isInvalid('logo')">Este campo es requerido!</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="releaseDate">Fecha Liberación</label>
+          <input type="date" id="releaseDate" formControlName="date_release" class="styled-input" [class.error]="isInvalid('date_release')">
+          <div *ngIf="isInvalid('date_release')">Este campo es requerido!</div>
+        </div>
+
+        <div class="form-group">
+          <label for="revisionDate">Fecha Revisión</label>
+          <input type="date" id="revisionDate" formControlName="date_revision" class="styled-input" [class.error]="isInvalid('date_revision')">
+          <div *ngIf="isInvalid('date_revision')">Este campo es requerido!</div>
+        </div>
+      </div>
+
+      <div class="modal-buttons">
+        <button class="cancel-btn" (click)="cancelDelete()">Reiniciar</button>
+        <button class="delete-btn" type="submit"  [ngClass]="{ 'button-disabled': productForm.invalid }" [disabled]="productForm.invalid">Enviar</button>
+      </div>
+    </form>
+  </div>
+</div>

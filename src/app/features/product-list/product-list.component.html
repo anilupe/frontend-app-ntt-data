@@ -1,14 +1,96 @@
-<div class="search-container">
-    <input [(ngModel)]="searchTerm" placeholder="Buscar productos" />
-    <button (click)="searchProducts()">Buscar</button>
+
+<div class="header">
+  <div class="title-container">
+    <img src="assets/icons/icon-money.png" alt="Icono" class="icon">
+    <div class="title">BANCO</div>
   </div>
-  <div class="product-list">
-    <div *ngFor="let product of products" class="product-item">
-      <img [src]="product.logo" alt="{{ product.name }}" />
-      <h2>{{ product.name }}</h2>
-      <p>{{ product.description }}</p>
-      <p>Fecha de lanzamiento: {{ product.date_release }}</p>
-      <p>Fecha de revisión: {{ product.date_revision }}</p>
+</div>
+
+<div class="product-list-container">
+  <div class="product-list-search">
+    <div class="search-container">
+      <input [(ngModel)]="searchTerm" (ngModelChange)="searchProducts()" placeholder="Search..." class="search-input" />
+      <button (click)="addProduct()" class="add-button">Agregar</button>
+  
     </div>
   </div>
-  
+ 
+ <div class="product-list-wrapper">
+    <div class="product-list-container-table">
+      <div *ngIf="isLoading">
+        <app-skeleton></app-skeleton>
+      </div>
+      <table class="product-table" *ngIf="!isLoading">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Logo</th>
+            <th>Nombre del producto</th>
+            <th> Descripción<img src="assets/icons/icon-info.png" alt="Icono 1"></th>
+            <th>Fecha de liberación <img src="assets/icons/icon-info.png" alt="Icono 1"></th>
+            <th>Fecha de reestructuración <img src="assets/icons/icon-info.png" alt="Icono 1"></th>
+            <th></th>
+
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of filteredProducts">
+            <td></td>
+
+            <td><img [src]="product.logo" alt="{{ product.name }}" class="product-logo" /></td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.description }}</td>
+            <td>{{ product.date_release | date:'dd/MM/yyyy' }}</td>
+            <td>{{ product.date_revision | date:'dd/MM/yyyy' }}</td>
+            <td>
+              <div class="dropdown">
+                <button class="dropbtn cursor-pointer">
+                  <img src="assets/icons/icon-elipsis.png" alt="Menú" > 
+
+                </button>
+                <div class="dropdown-content cursor-pointer">
+                  <a (click)="editProduct(product)">Editar</a>
+                  <a (click)="showDeleteModal(product)">Eliminar</a> <!-- Opción de eliminar -->
+
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="!isLoading" class="results-count">
+        {{ filteredProducts.length }} Resultados
+        <div class="select-container" >
+          <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+            <option value="5"> 5</option>
+            <option value="10"> 10</option>
+            <option value="20"> 20</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="showSuccessMessage" class="message success">
+    Producto eliminado correctamente.
+  </div>
+  <div *ngIf="showErrorMessage" class="message error">
+    Error al eliminar el producto. Por favor, inténtalo de nuevo.
+  </div>
+</div>
+<app-delete-modal
+  [isVisible]="this.showDeleteConfirmation"
+  [product]="productToDelete"
+  [showErrorMessage]="showErrorMessage"
+  [showSuccessMessage]="showSuccessMessage"
+  (deleteConfirmed)="deleteConfirmed($event)"
+  (cancelClicked)="cancelDeleteModal()">
+</app-delete-modal>
+
+<app-add-modal
+  [isVisible]="this.showAdd"
+  [product]="productToDelete"
+  [showErrorMessage]="showErrorMessage"
+  [showSuccessMessage]="showSuccessMessage"
+  (addConfirmed)="addConfirmed($event)"
+  (cancelClicked)="cancelAddModal()">
+</app-add-modal>
