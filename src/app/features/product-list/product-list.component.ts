@@ -16,13 +16,15 @@ export class ProductListComponent implements OnInit, OnDestroy {
   pageSize = 5;
   showDeleteConfirmation = false;
   productToDelete!: ProductItem;
+  productToAdd!: ProductItem;
   showSuccessMessage = false;
   showErrorMessage = false;
+  message='';
   isLoading = true;
   showAdd = false;
   private subscriptions = new Subscription();
 
-  constructor(private productService: ProductService, private router: Router) {}
+  constructor(private productService: ProductService, private router: Router ) {}
 
   ngOnInit(): void {
     this.fetchProducts();
@@ -54,10 +56,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   onPageSizeChange(): void {
     this.updateFilteredProducts();
   }
-  addProduct() {
-   
-    this.showAdd = true;
-  }
+
 
   searchProducts(): void {
     this.filteredProducts = this.products.filter(product =>
@@ -66,7 +65,11 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   editProduct(product: ProductItem): void {
-    this.router.navigate(['/editar-producto', product.id], { queryParams: { disableId: true } });
+    const productJson = JSON.stringify(product);
+    this.router.navigate(['/features/edit'], { queryParams: { product: productJson } });
+  }
+  addProduct(): void {
+    this.router.navigate(['/features/add']);
   }
 
   showDeleteModal(product: ProductItem): void {
@@ -79,12 +82,14 @@ export class ProductListComponent implements OnInit, OnDestroy {
       this.productService.deleteProduct(this.productToDelete.id).subscribe({
         next: () => {
           this.showSuccessMessage = true;
+          this.message='Producto eliminado exitósamente'
           this.showDeleteConfirmation = false;
           this.clearMessagesAfterDelay();
           this.fetchProducts(); 
         },
         error: () => {
           this.showErrorMessage = true;
+          this.message='Ocurrió un error al eliminar el producto'
           this.showDeleteConfirmation = false;
           this.clearMessagesAfterDelay();
         }
@@ -92,24 +97,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
     }
   }
   
-  addConfirmed(confirmed: boolean): void {
-    if (confirmed && this.productToDelete) {
-      this.productService.deleteProduct(this.productToDelete.id).subscribe({
-        next: () => {
-          this.showSuccessMessage = true;
-          this.showDeleteConfirmation = false;
-          this.clearMessagesAfterDelay();
-          this.fetchProducts(); 
-        },
-        error: () => {
-          this.showErrorMessage = true;
-          this.showDeleteConfirmation = false;
-          this.clearMessagesAfterDelay();
-        }
-      });
-    }
-  }
-
+ 
   cancelDeleteModal(): void {
     this.showDeleteConfirmation = false;
   }
@@ -121,6 +109,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.showSuccessMessage = false;
       this.showErrorMessage = false;
-    }, 2000);
+    }, 3000);
   }
 }

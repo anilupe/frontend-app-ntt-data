@@ -7,16 +7,14 @@ import { ProductListComponent } from './features/product-list/product-list.compo
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { DeleteModalComponent } from './features/product-delete/delete-modal/delete-modal.component';
-import { SkeletonComponent } from './shared/skeleton/skeleton.component';
-import { AddModalComponent } from './features/product-add/add-modal/add-modal.component';
+import { SkeletonComponent } from './shared/components/skeleton/skeleton.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ProductListComponent,
     DeleteModalComponent,
-    SkeletonComponent,
-    AddModalComponent    
+    SkeletonComponent
   ],
   imports: [
     BrowserModule,

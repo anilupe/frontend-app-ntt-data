@@ -1,0 +1,143 @@
+
+.title-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .icon {
+    width: 40px;
+    height: 40px;
+    margin-right: 8px;
+  }
+  
+  .title {
+    color: #1f3467;
+    text-align: center;
+    font-size: 24px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
+  
+  .addContainer {
+    width: 70%;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: sans-serif;
+  }
+  
+  .form-container {
+    width: 50%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #fefefe;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .header {
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 20px;
+    font-size: 30px;
+    font-family: sans-serif;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .form-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  
+  .form-group {
+    flex: 1 1 calc(40% - 10px);
+    margin-right: 20px;
+    margin-bottom: 10px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    font-family: sans-serif;
+    font-size: 14px;
+  }
+  
+  .styled-input {
+    width: 90%;
+    padding: 15px; 
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+  }
+  
+  .styled-input:focus {
+    outline: none;
+    border-color: #7d7d7d;
+  }
+  
+  .styled-input.error {
+    border-color: red;
+  }
+  
+  textarea.styled-input {
+    height: 100px;
+    resize: vertical;
+  }
+  
+  .modal-buttons {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 10px;
+  }
+  
+  .cancel-btn {
+    background-color: #dfdfdf;
+    color: #1f3467;
+    border: none;
+    border-radius: 5px;
+    padding: 15px 0;
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: sans-serif;
+    width: 10%;
+  }
+  
+  .send-btn {
+    background-color: #ffeb67;
+    color: #1f3467;
+    border: none;
+    border-radius: 5px;
+    padding: 15px 0;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: sans-serif;
+    width: 10%;
+  }
+  
+  .button-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  .form-group > div {
+    color: #f90019;
+    margin-top: 5px;
+    font-size: 0.875rem;
+  }
+  

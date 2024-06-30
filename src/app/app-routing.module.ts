@@ -4,7 +4,16 @@ import { ProductListComponent } from './features/product-list/product-list.compo
 
 const routes: Routes = [
   { path: '', redirectTo: '/products', pathMatch: 'full' },
-  { path: 'products', component: ProductListComponent }];
+  { path: 'products', component: ProductListComponent },
+  {
+    path: 'features',
+    loadChildren: () => import('./features/features.module').then(m => m.FeaturesModule)
+  },
+  { path: '**', redirectTo: 'products' }
+
+
+
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

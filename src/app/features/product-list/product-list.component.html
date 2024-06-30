@@ -1,4 +1,5 @@
 
+
 <div class="header">
   <div class="title-container">
     <img src="assets/icons/icon-money.png" alt="Icono" class="icon">
@@ -36,7 +37,6 @@
         <tbody>
           <tr *ngFor="let product of filteredProducts">
             <td></td>
-
             <td><img [src]="product.logo" alt="{{ product.name }}" class="product-logo" /></td>
             <td>{{ product.name }}</td>
             <td>{{ product.description }}</td>
@@ -50,7 +50,7 @@
                 </button>
                 <div class="dropdown-content cursor-pointer">
                   <a (click)="editProduct(product)">Editar</a>
-                  <a (click)="showDeleteModal(product)">Eliminar</a> <!-- Opción de eliminar -->
+                  <a (click)="showDeleteModal(product)">Eliminar</a> 
 
                 </div>
               </div>
@@ -69,13 +69,7 @@
         </div>
       </div>
     </div>
-  </div>
-  <div *ngIf="showSuccessMessage" class="message success">
-    Producto eliminado correctamente.
-  </div>
-  <div *ngIf="showErrorMessage" class="message error">
-    Error al eliminar el producto. Por favor, inténtalo de nuevo.
-  </div>
+  </div> 
 </div>
 <app-delete-modal
   [isVisible]="this.showDeleteConfirmation"
@@ -86,11 +80,3 @@
   (cancelClicked)="cancelDeleteModal()">
 </app-delete-modal>
 
-<app-add-modal
-  [isVisible]="this.showAdd"
-  [product]="productToDelete"
-  [showErrorMessage]="showErrorMessage"
-  [showSuccessMessage]="showSuccessMessage"
-  (addConfirmed)="addConfirmed($event)"
-  (cancelClicked)="cancelAddModal()">
-</app-add-modal>
