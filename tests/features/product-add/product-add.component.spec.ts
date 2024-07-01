@@ -64,7 +64,6 @@ describe('ProductAddComponent', () => {
   });
 
   test('should call productService.addProduct on submit with valid data', fakeAsync(() => {
-    // Define el producto que se va a agregar
     const productToAdd: ProductItem = {
       id: '123',
       name: 'Test Product',
