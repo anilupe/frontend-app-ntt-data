@@ -1,6 +1,9 @@
 # FrontendApp
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.8.
+FrontendApp is an Angular application designed for managing product information, including adding, editing, and deleting products. It incorporates error handling, form validations, and responsive design practices.
+
+Getting Started
+Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.
 
 ## Development server
 
@@ -16,12 +19,15 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 ## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Run `> npm run test:watch` to execute the unit tests via [jest].
 
-## Running end-to-end tests
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## Features
+Product Listing: Display a list of products with detailed information.
 
-## Further help
+Product Management: Perform CRUD operations on products with form validations.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Error Handling: Manage exceptions and display visual error messages for better user experience.
+
+## Authors
+Ana Pereira
