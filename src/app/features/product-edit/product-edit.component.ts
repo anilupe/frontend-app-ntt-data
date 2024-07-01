@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, map, catchError, of } from 'rxjs';
 import { ProductItem } from 'src/app/core/models/product.model';
-import { ProductService } from 'src/app/core/services/product.service';
+import { ProductService } from '../../core/services/product.service';
 
 @Component({
   selector: 'app-product-edit',
@@ -13,32 +12,32 @@ import { ProductService } from 'src/app/core/services/product.service';
 export class ProductEditComponent implements OnInit {
   productForm!: FormGroup;
   revisionDate = '';
-showSuccessMessage: any;
-message: any;
-showErrorMessage: any;
-product!: ProductItem;
+  showSuccessMessage: any;
+  message: any;
+  showErrorMessage: any;
+  product!: ProductItem;
 
   constructor(private fb: FormBuilder, private productService: ProductService, private router: Router, private activateRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.activateRoute.queryParams.subscribe(params => {
-      const productJson = params['product']; 
+      const productJson = params['product'];
       if (productJson) {
-        this.product = JSON.parse(productJson); 
+        this.product = JSON.parse(productJson);
       }
     });
-    
+
     this.initializeForm();
   }
 
   initializeForm(): void {
     this.productForm = this.fb.group({
-      id: [{value: '', disabled: true }, Validators.required],
+      id: [ '', Validators.required],
       name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
       description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(200)]],
       logo: ['', Validators.required],
       date_release: ['', Validators.required],
-      date_revision: [{ value: '', disabled: true }, Validators.required]
+      date_revision: ['', Validators.required]
     });
     Object.values(this.productForm.controls).forEach(control => {
       control.markAsTouched();
@@ -61,9 +60,10 @@ product!: ProductItem;
 
   onSubmit(): void {
     if (this.productForm.valid) {
-      const productToAdd: ProductItem = { ...this.productForm.value };
-      productToAdd.date_revision = this.productForm.get('date_revision')?.value;
-      this.router.navigate(['/products']);
+      const productToEdit: ProductItem = { ...this.productForm.value };
+      productToEdit.date_revision = this.productForm.get('date_revision')?.value;
+      productToEdit.id = this.productForm.get('id')?.value;
+      this.editConfirmed(productToEdit);
 
     } else {
       this.markFormGroupTouched(this.productForm);
@@ -89,11 +89,27 @@ product!: ProductItem;
 
   }
 
-  validateProductId(control: AbstractControl): Observable<ValidationErrors | null> {
-    const productId = control.value;
-    return this.productService.validateId(productId).pipe(
-      map(exists => (exists ? { idExists: true } : null)),
-      catchError(() => of(null))
-    );
+  editConfirmed(product: ProductItem): void {
+    this.productService.updateProduct(product.id, product).subscribe({
+      next: () => {
+        this.showSuccessMessage = true;
+        this.message = 'Producto editado con éxito'
+        this.clearMessagesAfterDelay();
+      },
+      error: () => {
+        this.showErrorMessage = true;
+        this.message = 'Ocurrió un error en editar producto'
+        this.clearMessagesAfterDelay();
+      }
+    });
   }
+
+  clearMessagesAfterDelay(): void {
+    setTimeout(() => {
+      this.showSuccessMessage = false;
+      this.showErrorMessage = false;
+      this.router.navigate(['/products']);
+    }, 3000);
+  }
+
 }

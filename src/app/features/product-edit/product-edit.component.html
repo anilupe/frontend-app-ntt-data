@@ -1,5 +1,5 @@
 <div class="alert-container">
-    <app-alert  *ngIf="showSuccessMessage" message="{{message}}" type="success"></app-alert>
+    <app-alert *ngIf="showSuccessMessage" message="{{message}}" type="success"></app-alert>
   
     <app-alert *ngIf="showErrorMessage" message="{{message}}" type="error"></app-alert>
   </div>
@@ -10,15 +10,15 @@
         <div class="title">BANCO</div>
       </div>
     </div>
-    
+  
+    <div class="container">
       <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="addContainer">
         <div class="header">Formulario de Edición</div>
     
         <div class="form-row">
           <div class="form-group">
             <label for="productId">ID</label>
-            <input type="text" id="productId" formControlName="id" class="styled-input" [class.error]="isInvalid('id')" required>
-            <div *ngIf="isInvalid('id')">ID no válido! Debe tener entre 3 y 10 caracteres.</div>
+            <input type="text" id="productId" formControlName="id" class="styled-input" [class.error]="isInvalid('id')" required readonly>
           </div>
     
           <div class="form-group">
@@ -51,13 +51,14 @@
     
           <div class="form-group">
             <label for="date_revision">Fecha Revisión</label>
-            <input type="date" id="date_revision" formControlName="date_revision" class="styled-input" [class.error]="isInvalid('date_revision')">
+            <input type="date" id="date_revision" formControlName="date_revision" class="styled-input" [class.error]="isInvalid('date_revision')" readonly>
           </div>
         </div>
     
         <div class="modal-buttons">
           <button class="cancel-btn" (click)="restart()">Reiniciar</button>
-          <button class="send-btn" type="submit" [ngClass]="{ 'button-disabled': productForm.invalid }" [disabled]="productForm.invalid">Enviar</button>
+          <button class="send-btn" type="submit" [ngClass]="{ 'button-disabled': productForm.invalid || showSuccessMessage }" [disabled]="productForm.invalid || showErrorMessage">Enviar</button>
         </div>
       </form>
-    
+    </div>
+  

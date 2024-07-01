@@ -1,5 +1,5 @@
 <div class="alert-container">
-  <app-alert *ngIf="true" message="Producto agregado correctamente" type="success"></app-alert>
+  <app-alert *ngIf="showSuccessMessage" message="Producto agregado correctamente" type="success"></app-alert>
 
   <app-alert *ngIf="showErrorMessage" message="Error no se pudo agregar el producto" type="error"></app-alert>
 </div>
@@ -10,7 +10,8 @@
       <div class="title">BANCO</div>
     </div>
   </div>
-  
+
+  <div class="container">
     <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="addContainer">
       <div class="header">Formulario de Registro</div>
   
@@ -51,13 +52,14 @@
   
         <div class="form-group">
           <label for="date_revision">Fecha Revisión</label>
-          <input type="date" id="date_revision" formControlName="date_revision" class="styled-input" [class.error]="isInvalid('date_revision')">
+          <input type="date" id="date_revision" formControlName="date_revision" class="styled-input" [class.error]="isInvalid('date_revision')" readonly>
         </div>
       </div>
   
       <div class="modal-buttons">
         <button class="cancel-btn" (click)="restart()">Reiniciar</button>
-        <button class="send-btn" type="submit" [ngClass]="{ 'button-disabled': productForm.invalid }" [disabled]="productForm.invalid">Enviar</button>
+        <button class="send-btn" type="submit" [ngClass]="{ 'button-disabled': productForm.invalid || showSuccessMessage }" [disabled]="productForm.invalid || showErrorMessage">Enviar</button>
       </div>
     </form>
-  
+  </div>
+

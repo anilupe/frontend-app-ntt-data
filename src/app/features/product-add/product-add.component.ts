@@ -13,17 +13,21 @@ import { ProductService } from 'src/app/core/services/product.service';
 export class ProductAddComponent implements OnInit {
   productForm!: FormGroup;
   revisionDate = '';
-showSuccessMessage: any;
-message: any;
-showErrorMessage: any;
+  showSuccessMessage = false;
+  showErrorMessage = false;
+  message = '';
 
-  constructor(private fb: FormBuilder, private productService: ProductService, private router: Router) { }
+  constructor(
+    private fb: FormBuilder,
+    private productService: ProductService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.initializeForm();
   }
 
-  initializeForm(): void {
+  private initializeForm(): void {
     this.productForm = this.fb.group({
       id: ['', {
         validators: [Validators.required, Validators.minLength(3), Validators.maxLength(10)],
@@ -34,15 +38,12 @@ showErrorMessage: any;
       description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(200)]],
       logo: ['', Validators.required],
       date_release: ['', Validators.required],
-      date_revision: [{ value: '', disabled: true }, Validators.required]
+      date_revision: ['', Validators.required]
     });
-    Object.values(this.productForm.controls).forEach(control => {
-      control.markAsTouched();
-    });
-
+    this.markFormGroupTouched(this.productForm);
   }
 
-  subscribeToReleaseDateChanges(newValue: string) {
+  subscribeToReleaseDateChanges(newValue: string): void {
     const releaseDate = new Date(newValue);
     const revisionDate = new Date(releaseDate.getFullYear() + 1, releaseDate.getMonth(), releaseDate.getDate());
     this.productForm.patchValue({
@@ -59,15 +60,13 @@ showErrorMessage: any;
     if (this.productForm.valid) {
       const productToAdd: ProductItem = { ...this.productForm.value };
       productToAdd.date_revision = this.productForm.get('date_revision')?.value;
-      this.addConfirmed(this.productForm.value)
-      
-
+      this.addConfirmed(productToAdd);
     } else {
       this.markFormGroupTouched(this.productForm);
     }
   }
 
-  markFormGroupTouched(formGroup: FormGroup): void {
+  private markFormGroupTouched(formGroup: FormGroup): void {
     Object.values(formGroup.controls).forEach(control => {
       control.markAsTouched();
       if (control instanceof FormGroup) {
@@ -75,43 +74,40 @@ showErrorMessage: any;
       }
     });
   }
-  addConfirmed(product: ProductItem ): void {
-   
-      
-      this.productService.addProduct(product).subscribe({
-        next: () => {
-          this.showSuccessMessage = true;
-          this.message='Producto agregado con éxito'
-          this.clearMessagesAfterDelay();
-        },
-        error: () => {
-          this.showErrorMessage = true;
-          this.message='Ocurrió un error en agregar producto'
-          this.clearMessagesAfterDelay();
-        }
-      });
-  
+
+  private addConfirmed(product: ProductItem): void {
+    this.productService.addProduct(product).subscribe({
+      next: () => {
+        this.showSuccessMessage = true;
+        this.message = 'Producto agregado con éxito';
+        this.clearMessagesAfterDelay();
+      },
+      error: () => {
+        this.showErrorMessage = true;
+        this.message = 'Ocurrió un error al agregar producto';
+        this.clearMessagesAfterDelay();
+      }
+    });
   }
-
-
 
   restart(): void {
     this.productForm.reset();
-    Object.values(this.productForm.controls).forEach(control => {
-      control.markAsTouched();
-    });
-
+    this.markFormGroupTouched(this.productForm);
   }
 
   validateProductId(control: AbstractControl): Observable<ValidationErrors | null> {
     const productId = control.value;
+    if (!productId) {
+      return of(null);
+    }
     return this.productService.validateId(productId).pipe(
       map(exists => (exists ? { idExists: true } : null)),
-      catchError(() => of(null))
+      catchError(() => of({ idExists: true })) 
     );
   }
+  
 
-  clearMessagesAfterDelay(): void {
+   clearMessagesAfterDelay(): void {
     setTimeout(() => {
       this.showSuccessMessage = false;
       this.showErrorMessage = false;

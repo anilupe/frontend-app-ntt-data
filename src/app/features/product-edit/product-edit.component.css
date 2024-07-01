@@ -1,5 +1,5 @@
 
-.title-container {
+  .title-container {
     display: flex;
     align-items: center;
   }
@@ -19,14 +19,32 @@
     font-weight: bold;
   }
   
+  .header-title {
+    margin-bottom: 20px;
+    font-size: 30px;
+    font-family: sans-serif;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+  
   .addContainer {
     width: 70%;
-    margin: 0 auto;
+    margin: 15px auto 0;  
     background-color: #ffffff;
     border-radius: 5px;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     font-family: sans-serif;
+  }
+  
+  .container {
+    background-color: #f4f6f9;
+    padding: 40px;
   }
   
   .form-container {
@@ -75,7 +93,7 @@
   
   .styled-input {
     width: 90%;
-    padding: 15px; 
+    padding: 15px;
     font-size: 1rem;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -139,5 +157,44 @@
     color: #f90019;
     margin-top: 5px;
     font-size: 0.875rem;
+  }
+  
+  @media (max-width: 768px) {
+    .addContainer {
+      width: 90%;
+    }
+  
+    .form-row {
+      flex-direction: column;
+    }
+  
+    .form-group {
+      margin-right: 0;
+      width: 100%;
+    }
+  
+    .cancel-btn,
+    .send-btn {
+      width: 100%;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .styled-input {
+      width: 100%;
+    }
+  
+    .icon {
+      width: 30px;
+      height: 30px;
+    }
+  
+    .title {
+      font-size: 20px;
+    }
+  
+    .header-title {
+      font-size: 24px;
+    }
   }
   
