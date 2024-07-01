@@ -7,20 +7,19 @@ import { ProductItem } from 'src/app/core/models/product.model';
   styleUrls: ['./delete-modal.component.css']
 })
 export class DeleteModalComponent {
-  @Input() isVisible: boolean = false;
+  @Input() isVisible = false;
   @Input() product!: ProductItem;
-  @Input() showSuccessMessage: boolean = false;
-  @Input() showErrorMessage: boolean = false;
+  @Input() showSuccessMessage = false;
+  @Input() showErrorMessage = false;
 
   @Output() deleteConfirmed: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() cancelClicked: EventEmitter<void> = new EventEmitter<void>();
-
 
   cancelDelete(): void {
     this.cancelClicked.emit();
   }
 
-  deleteProduct(): void {
+  confirmDelete(): void {
     this.deleteConfirmed.emit(true);
   }
 }

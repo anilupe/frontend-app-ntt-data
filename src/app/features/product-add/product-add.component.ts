@@ -112,6 +112,6 @@ export class ProductAddComponent implements OnInit {
       this.showSuccessMessage = false;
       this.showErrorMessage = false;
       this.router.navigate(['/products']);
-    }, 3000);
+    }, 2500);
   }
 }

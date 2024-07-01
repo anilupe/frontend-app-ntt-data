@@ -2,7 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProductService } from 'src/app/core/services/product.service';
 import { ProductItem } from 'src/app/core/models/product.model';
-import { Subscription } from 'rxjs';
+import { Subscription, throwError } from 'rxjs';
+import { catchError, finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-product-list',
@@ -16,15 +17,14 @@ export class ProductListComponent implements OnInit, OnDestroy {
   pageSize = 5;
   showDeleteConfirmation = false;
   productToDelete!: ProductItem;
-  productToAdd!: ProductItem;
   showSuccessMessage = false;
   showErrorMessage = false;
-  message='';
+  message = '';
   isLoading = true;
-  showAdd = false;
+
   private subscriptions = new Subscription();
 
-  constructor(private productService: ProductService, private router: Router ) {}
+  constructor(private productService: ProductService, private router: Router) {}
 
   ngOnInit(): void {
     this.fetchProducts();
@@ -36,17 +36,21 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   fetchProducts(): void {
     this.isLoading = true;
-    const productsSubscription = this.productService.getProducts().subscribe({
-      next: (products) => {
+    this.subscriptions.add(
+      this.productService.getProducts().pipe(
+        catchError((error) => {
+          this.showErrorMessage = true;
+          this.message = 'Ocurrió un error al cargar los productos';
+          return throwError(error);
+        }),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      ).subscribe((products) => {
         this.products = products.data;
         this.updateFilteredProducts();
-        this.isLoading = false;
-      },
-      error: () => {
-        this.isLoading = false;
-      }
-    });
-    this.subscriptions.add(productsSubscription);
+      })
+    );
   }
 
   updateFilteredProducts(): void {
@@ -56,7 +60,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
   onPageSizeChange(): void {
     this.updateFilteredProducts();
   }
-
 
   searchProducts(): void {
     this.filteredProducts = this.products.filter(product =>
@@ -68,6 +71,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
     const productJson = JSON.stringify(product);
     this.router.navigate(['/features/edit'], { queryParams: { product: productJson } });
   }
+
   addProduct(): void {
     this.router.navigate(['/features/add']);
   }
@@ -79,36 +83,34 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   deleteConfirmed(confirmed: boolean): void {
     if (confirmed && this.productToDelete) {
-      this.productService.deleteProduct(this.productToDelete.id).subscribe({
-        next: () => {
+      this.subscriptions.add(
+        this.productService.deleteProduct(this.productToDelete.id).pipe(
+          catchError((error) => {
+            this.showErrorMessage = true;
+            this.message = 'Ocurrió un error al eliminar el producto';
+            return throwError(error);
+          }),
+          finalize(() => {
+            this.clearMessagesAfterDelay();
+            this.fetchProducts();
+          })
+        ).subscribe(() => {
           this.showSuccessMessage = true;
-          this.message='Producto eliminado exitósamente'
+          this.message = 'Producto eliminado exitósamente';
           this.showDeleteConfirmation = false;
-          this.clearMessagesAfterDelay();
-          this.fetchProducts(); 
-        },
-        error: () => {
-          this.showErrorMessage = true;
-          this.message='Ocurrió un error al eliminar el producto'
-          this.showDeleteConfirmation = false;
-          this.clearMessagesAfterDelay();
-        }
-      });
+        })
+      );
     }
   }
-  
- 
+
   cancelDeleteModal(): void {
     this.showDeleteConfirmation = false;
-  }
-  cancelAddModal(): void {
-    this.showAdd = false;
   }
 
   clearMessagesAfterDelay(): void {
     setTimeout(() => {
       this.showSuccessMessage = false;
       this.showErrorMessage = false;
-    }, 3000);
+    }, 2500);
   }
 }

@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductItem } from 'src/app/core/models/product.model';
 import { ProductService } from '../../core/services/product.service';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-product-edit',
@@ -11,41 +13,46 @@ import { ProductService } from '../../core/services/product.service';
 })
 export class ProductEditComponent implements OnInit {
   productForm!: FormGroup;
-  revisionDate = '';
-  showSuccessMessage: any;
-  message: any;
-  showErrorMessage: any;
   product!: ProductItem;
+  showSuccessMessage = false;
+  showErrorMessage = false;
+  message = '';
 
-  constructor(private fb: FormBuilder, private productService: ProductService, private router: Router, private activateRoute: ActivatedRoute) { }
+  constructor(
+    private fb: FormBuilder,
+    private productService: ProductService,
+    private router: Router,
+    private activateRoute: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    this.activateRoute.queryParams.subscribe(params => {
-      const productJson = params['product'];
-      if (productJson) {
-        this.product = JSON.parse(productJson);
-      }
-    });
-
     this.initializeForm();
+    this.fetchProduct();
   }
 
   initializeForm(): void {
     this.productForm = this.fb.group({
-      id: [ '', Validators.required],
+      id: ['', Validators.required],
       name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
       description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(200)]],
       logo: ['', Validators.required],
       date_release: ['', Validators.required],
       date_revision: ['', Validators.required]
     });
-    Object.values(this.productForm.controls).forEach(control => {
-      control.markAsTouched();
-    });
-    this.productForm.patchValue(this.product);
   }
 
-  subscribeToReleaseDateChanges(newValue: string) {
+  fetchProduct(): void {
+    this.activateRoute.queryParams.subscribe(params => {
+      const productJson = params['product'];
+      if (productJson) {
+        this.product = JSON.parse(productJson);
+        this.productForm.patchValue(this.product);
+        this.subscribeToReleaseDateChanges(this.product.date_release);
+      }
+    });
+  }
+
+  subscribeToReleaseDateChanges(newValue: string): void {
     const releaseDate = new Date(newValue);
     const revisionDate = new Date(releaseDate.getFullYear() + 1, releaseDate.getMonth(), releaseDate.getDate());
     this.productForm.patchValue({
@@ -61,10 +68,7 @@ export class ProductEditComponent implements OnInit {
   onSubmit(): void {
     if (this.productForm.valid) {
       const productToEdit: ProductItem = { ...this.productForm.value };
-      productToEdit.date_revision = this.productForm.get('date_revision')?.value;
-      productToEdit.id = this.productForm.get('id')?.value;
       this.editConfirmed(productToEdit);
-
     } else {
       this.markFormGroupTouched(this.productForm);
     }
@@ -79,28 +83,24 @@ export class ProductEditComponent implements OnInit {
     });
   }
 
-
   restart(): void {
     this.productForm.reset();
-
-    Object.values(this.productForm.controls).forEach(control => {
-      control.markAsTouched();
-    });
-
+    this.showSuccessMessage = false;
+    this.showErrorMessage = false;
+    this.message = '';
   }
 
   editConfirmed(product: ProductItem): void {
-    this.productService.updateProduct(product.id, product).subscribe({
-      next: () => {
-        this.showSuccessMessage = true;
-        this.message = 'Producto editado con éxito'
-        this.clearMessagesAfterDelay();
-      },
-      error: () => {
+    this.productService.updateProduct(product.id, product).pipe(
+      catchError(error => {
         this.showErrorMessage = true;
-        this.message = 'Ocurrió un error en editar producto'
-        this.clearMessagesAfterDelay();
-      }
+        this.message = 'Ocurrió un error al editar el producto';
+        return throwError(error);
+      })
+    ).subscribe(() => {
+      this.showSuccessMessage = true;
+      this.message = 'Producto editado con éxito';
+      this.clearMessagesAfterDelay();
     });
   }
 
@@ -108,8 +108,8 @@ export class ProductEditComponent implements OnInit {
     setTimeout(() => {
       this.showSuccessMessage = false;
       this.showErrorMessage = false;
+      this.message = '';
       this.router.navigate(['/products']);
-    }, 3000);
+    }, 2500);
   }
-
 }
