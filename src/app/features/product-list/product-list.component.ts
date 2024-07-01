@@ -113,4 +113,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
       this.showErrorMessage = false;
     }, 2500);
   }
+  handleImageError(event: any, defaultImage: string): void {
+    event.target.src = defaultImage; 
+  }
 }

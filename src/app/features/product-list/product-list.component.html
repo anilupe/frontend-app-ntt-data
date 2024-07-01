@@ -37,7 +37,7 @@
         <tbody>
           <tr *ngFor="let product of filteredProducts">
             <td></td>
-            <td><img [src]="product.logo" alt="{{ product.name }}" class="product-logo" /></td>
+            <img [src]="product.logo" (error)="handleImageError($event, 'assets/icons/icon-no-image.png')" alt="{{ product.name }}" class="product-logo" />
             <td>{{ product.name }}</td>
             <td>{{ product.description }}</td>
             <td>{{ product.date_release | date:'dd/MM/yyyy' }}</td>
