@@ -34,7 +34,7 @@ describe('DeleteModalComponent', () => {
   });
 
   it('should emit deleteConfirmed event with true when deleteProduct is called', () => {
-    component.deleteProduct();
+    component.confirmDelete();
     expect(deleteConfirmedSpy).toHaveBeenCalledWith(true);
   });
 

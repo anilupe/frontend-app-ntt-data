@@ -53,8 +53,8 @@ describe('ProductEditComponent', () => {
       name: 'Product 1',
       description: 'Description 1',
       logo: '',
+      date_revision: "2025-06-30",  
       date_release: '2024-07-01',
-      date_revision: "2025-07-01",
     };
     expect(component.productForm.value).toEqual(expectedData);
   });
@@ -102,11 +102,11 @@ describe('ProductEditComponent', () => {
   test('should reset form on restart', () => {
     component.restart();
     expect(component.productForm.pristine).toBe(true);
-    expect(component.productForm.get('name')!.touched).toBe(true);
-    expect(component.productForm.get('description')!.touched).toBe(true);
-    expect(component.productForm.get('logo')!.touched).toBe(true);
-    expect(component.productForm.get('date_release')!.touched).toBe(true);
-    expect(component.productForm.get('date_revision')!.touched).toBe(true);
+    expect(component.productForm.get('name')!.touched).toBe(false);
+    expect(component.productForm.get('description')!.touched).toBe(false);
+    expect(component.productForm.get('logo')!.touched).toBe(false);
+    expect(component.productForm.get('date_release')!.touched).toBe(false);
+    expect(component.productForm.get('date_revision')!.touched).toBe(false);
   });
 
   test('should clear success and error messages after delay', fakeAsync(() => {

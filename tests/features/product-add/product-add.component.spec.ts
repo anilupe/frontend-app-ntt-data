@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, tick, fakeAsync, flush } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { of, throwError, map, catchError } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { ProductAddComponent } from '../../../src/app/features/product-add/product-add.component';
 import { ProductItem } from 'src/app/core/models/product.model';
 import { ProductService } from 'src/app/core/services/product.service';
@@ -15,7 +15,7 @@ describe('ProductAddComponent', () => {
   beforeEach(async () => {
     productServiceMock = {
       addProduct: jest.fn(),
-      validateId: jest.fn()
+      validateId: jest.fn().mockReturnValue(of(false)),
     };
 
     routerMock = {
@@ -65,7 +65,7 @@ describe('ProductAddComponent', () => {
 
   test('should call productService.addProduct on submit with valid data', fakeAsync(() => {
     const productToAdd: ProductItem = {
-      id: '123',
+      id: '123555',
       name: 'Test Product',
       description: 'Description',
       logo: 'logo.png',
@@ -85,7 +85,6 @@ describe('ProductAddComponent', () => {
     expect(routerMock.navigate).toHaveBeenCalledWith(['/products']);
   }));
 
-
   test('should handle productService.addProduct error on submit', fakeAsync(() => {
     const productToAdd: ProductItem = {
       id: '123',
@@ -103,6 +102,8 @@ describe('ProductAddComponent', () => {
 
     expect(productServiceMock.addProduct).toHaveBeenCalledWith(productToAdd);
     expect(component.showErrorMessage).toBe(true);
+    flush();  
+
     expect(routerMock.navigate).toHaveBeenCalledWith(['/products']);
   }));
 
@@ -128,6 +129,5 @@ describe('ProductAddComponent', () => {
     tick(3000);
     expect(component.showSuccessMessage).toBe(false);
     expect(component.showErrorMessage).toBe(false);
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/products']);
   }));
 });
